@@ -195,4 +195,7 @@
     <string name="onb_next">بعدی</string>
     <string name="onb_back">قبلی</string>
     <string name="onb_finish">شروع</string>
+    <string name="onb_gps_btn">دریافت موقعیت تقریبی گوشی</string>
+    <string name="onb_hijri_today">تاریخ قمری امروز</string>
+    <string name="onb_hijri_hint">اگر با تقویم شما یک‌روز فرق دارد، با دکمه‌های − و + تنظیمش کنید.</string>
 </resources>

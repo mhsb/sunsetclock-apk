@@ -193,4 +193,7 @@
     <string name="onb_next">Next</string>
     <string name="onb_back">Back</string>
     <string name="onb_finish">Start</string>
+    <string name="onb_gps_btn">Get my approximate location</string>
+    <string name="onb_hijri_today">Today\'s Hijri date</string>
+    <string name="onb_hijri_hint">If it differs from your calendar by a day, adjust it with − and +.</string>
 </resources>

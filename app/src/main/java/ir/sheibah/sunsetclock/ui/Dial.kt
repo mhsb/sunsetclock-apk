@@ -1,6 +1,14 @@
 package ir.sheibah.sunsetclock.ui
 
 import android.graphics.Paint
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -56,8 +64,22 @@ fun SunsetDial(
     val dir = if (ccw) -1f else 1f
     val dirD = dir.toDouble()
 
+    val pulse by rememberInfiniteTransition(label = "sun").animateFloat(
+        initialValue = 0.85f, targetValue = 1.25f,
+        animationSpec = infiniteRepeatable(tween(1800, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+        label = "pulse"
+    )
+    val discTop = MaterialTheme.colorScheme.surfaceContainerLowest
+    val discEdge = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
+
     Box(modifier = modifier.aspectRatio(1f), contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.fillMaxSize()) {
+            // دیسک گرادیانی پشت صفحه
+            drawCircle(
+                brush = Brush.radialGradient(listOf(discTop, discEdge), center = Offset(size.width / 2f, size.height / 2f), radius = size.minDimension / 2f),
+                radius = size.minDimension / 2f - 6.dp.toPx(),
+                center = Offset(size.width / 2f, size.height / 2f)
+            )
             val stroke = size.minDimension * 0.075f
             val radius = size.minDimension / 2f - stroke / 2f - 2.dp.toPx()
             val c = Offset(size.width / 2f, size.height / 2f)
@@ -136,7 +158,7 @@ fun SunsetDial(
             // خورشید (لحظه‌ی اکنون)
             val a = Math.toRadians(dirD * nowFrac * 360.0 - 90.0)
             val sunPos = Offset(c.x + (radius * cos(a)).toFloat(), c.y + (radius * sin(a)).toFloat())
-            drawCircle(color = sunColor.copy(alpha = 0.30f), radius = stroke * 1.0f, center = sunPos)
+            drawCircle(color = sunColor.copy(alpha = 0.30f), radius = stroke * pulse, center = sunPos)
             drawCircle(color = Color.White, radius = stroke * 0.62f, center = sunPos)
             drawCircle(color = sunColor, radius = stroke * 0.5f, center = sunPos)
         }

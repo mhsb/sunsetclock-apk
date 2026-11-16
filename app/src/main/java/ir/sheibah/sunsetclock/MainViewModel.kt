@@ -84,7 +84,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         rescheduleAll()
     }
 
-    fun setHijriAdjust(v: Int) = repo.update { it.copy(hijriAdjust = v.coerceIn(-2, 2)) }
+    fun setHijriAdjust(v: Int) = repo.update { it.copy(hijriAdjust = v.coerceIn(-3, 3)) }
 
     fun setTheme(t: ThemeMode) = repo.update { it.copy(theme = t) }
 

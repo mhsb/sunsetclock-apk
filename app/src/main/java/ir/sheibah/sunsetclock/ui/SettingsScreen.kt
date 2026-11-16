@@ -329,11 +329,7 @@ internal fun SectionTitle(text: String) {
 
 @Composable
 internal fun SettingsCard(content: @Composable () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
-    ) {
+    SoftCard(modifier = Modifier.fillMaxWidth()) {
         Column { content() }
     }
 }

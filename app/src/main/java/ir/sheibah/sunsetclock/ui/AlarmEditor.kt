@@ -25,9 +25,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -43,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ir.sheibah.sunsetclock.R
 import ir.sheibah.sunsetclock.astro.CalcMethod
 import ir.sheibah.sunsetclock.astro.PrayerEvent
@@ -67,11 +66,8 @@ fun AlarmEditorSheet(
     val fa = isFarsi()
 
     var kind by remember { mutableStateOf(initial.kind) }
-    val timeState = rememberTimePickerState(
-        initialHour = initial.hour,
-        initialMinute = initial.minute,
-        is24Hour = true
-    )
+    var hour by remember { mutableIntStateOf(initial.hour) }
+    var minuteOfHour by remember { mutableIntStateOf(initial.minute) }
     var anchor by remember { mutableStateOf(initial.anchor) }
     var before by remember { mutableStateOf(initial.offsetMin <= 0) }
     var minutes by remember { mutableIntStateOf(abs(initial.offsetMin).coerceAtMost(MAX_OFFSET_MIN)) }
@@ -83,14 +79,14 @@ fun AlarmEditorSheet(
         label = label.trim(),
         enabled = true,
         kind = kind,
-        hour = timeState.hour,
-        minute = timeState.minute,
+        hour = hour,
+        minute = minuteOfHour,
         anchor = anchor,
         offsetMin = if (before) -minutes else minutes,
         daysMask = days
     )
-    val nowMs = System.currentTimeMillis()
-    val trigger = AlarmCalc.nextTrigger(draft, nowMs, place, method)
+    val nowMs = remember(draft) { System.currentTimeMillis() }
+    val trigger = remember(draft) { AlarmCalc.nextTrigger(draft, nowMs, place, method) }
 
     val shortNames = stringArrayResource(R.array.weekdays_short)
 
@@ -123,9 +119,13 @@ fun AlarmEditorSheet(
             }
 
             if (kind == AlarmKind.CLOCK) {
-                TimePicker(
-                    state = timeState,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                TimeWheels(
+                    values = listOf(hour, minuteOfHour),
+                    counts = listOf(24, 60),
+                    fa = fa,
+                    onChange = { col, v -> if (col == 0) hour = v else minuteOfHour = v },
+                    itemHeight = 60.dp,
+                    fontSize = 50
                 )
             } else {
                 // جمله‌ی قابل‌خواندن با چرخنده‌ها:  «۳۰  دقیقه  قبل  از  اذان صبح»
@@ -141,14 +141,15 @@ fun AlarmEditorSheet(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     WheelPicker(
                         count = MAX_OFFSET_MIN + 1,
                         selectedIndex = minutes,
                         onSelected = { minutes = it },
-                        modifier = Modifier.width(60.dp)
-                    ) { i -> WheelText(Fmt.num(i, fa)) }
+                        modifier = Modifier.width(62.dp),
+                        itemHeight = 52.dp
+                    ) { i, sel -> WheelLabel(Fmt.num(i, fa), sel, 30.sp) }
 
                     Text(minShort, style = MaterialTheme.typography.bodyMedium)
 
@@ -156,8 +157,10 @@ fun AlarmEditorSheet(
                         count = 2,
                         selectedIndex = if (before) 0 else 1,
                         onSelected = { before = it == 0 },
-                        modifier = Modifier.width(64.dp)
-                    ) { i -> WheelText(if (i == 0) beforeLabel else afterLabel) }
+                        modifier = Modifier.width(70.dp),
+                        itemHeight = 52.dp,
+                        loop = false
+                    ) { i, sel -> WheelLabel(if (i == 0) beforeLabel else afterLabel, sel, 22.sp) }
 
                     if (ofText.isNotEmpty()) {
                         Text(ofText, style = MaterialTheme.typography.bodyMedium)
@@ -167,8 +170,10 @@ fun AlarmEditorSheet(
                         count = events.size,
                         selectedIndex = events.indexOf(anchor).coerceAtLeast(0),
                         onSelected = { anchor = events[it] },
-                        modifier = Modifier.weight(1f)
-                    ) { i -> WheelText(stringResource(events[i].labelRes())) }
+                        modifier = Modifier.weight(1f),
+                        itemHeight = 52.dp,
+                        loop = false
+                    ) { i, sel -> WheelLabel(stringResource(events[i].labelRes()), sel, 22.sp) }
                 }
             }
 
@@ -228,19 +233,6 @@ fun AlarmEditorSheet(
             }
         }
     }
-}
-
-@Composable
-private fun WheelText(text: String) {
-    Text(
-        text,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Medium,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.padding(horizontal = 4.dp)
-    )
 }
 
 @Composable

@@ -5,6 +5,13 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.Typography
+import ir.sheibah.sunsetclock.R
 
 // پالت «غروب»: آسمان شب نیلی + کهربایی گرم
 val NightColor = Color(0xFF2B2F6B)
@@ -40,7 +47,7 @@ private val DarkColors = darkColorScheme(
 )
 
 private val LightColors = lightColorScheme(
-    primary = Color(0xFF9A5B00),
+    primary = Color(0xFFE67E00),
     onPrimary = Color(0xFFFFFFFF),
     primaryContainer = Color(0xFFFFDDB0),
     onPrimaryContainer = Color(0xFF301800),
@@ -52,25 +59,55 @@ private val LightColors = lightColorScheme(
     onTertiary = Color(0xFFFFFFFF),
     tertiaryContainer = Color(0xFFA0F2E3),
     onTertiaryContainer = Color(0xFF00201C),
-    background = Color(0xFFFFF8F1),
-    onBackground = Color(0xFF211A12),
-    surface = Color(0xFFFFF8F1),
-    onSurface = Color(0xFF211A12),
-    surfaceVariant = Color(0xFFF2E3D2),
-    onSurfaceVariant = Color(0xFF50453A),
+    background = Color(0xFFFFFFFF),
+    onBackground = Color(0xFF1B1B22),
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFF1B1B22),
+    surfaceVariant = Color(0xFFF1F1F6),
+    onSurfaceVariant = Color(0xFF6B6B78),
     surfaceContainerLowest = Color(0xFFFFFFFF),
-    surfaceContainerLow = Color(0xFFFFF1E2),
-    surfaceContainer = Color(0xFFFBEBDA),
-    surfaceContainerHigh = Color(0xFFF6E4D1),
-    surfaceContainerHighest = Color(0xFFF0DCC8),
-    outline = Color(0xFF82746A),
-    outlineVariant = Color(0xFFD4C4B4)
+    surfaceContainerLow = Color(0xFFFAFAFC),
+    surfaceContainer = Color(0xFFF6F6FA),
+    surfaceContainerHigh = Color(0xFFF1F1F6),
+    surfaceContainerHighest = Color(0xFFEAEAF1),
+    outline = Color(0xFF8C8C99),
+    outlineVariant = Color(0xFFE4E4EC)
 )
+
+/** فونت استعداد (Estedad) با مجوز OFL */
+val Estedad = FontFamily(
+    Font(R.font.estedad_extralight, FontWeight.ExtraLight),
+    Font(R.font.estedad_light, FontWeight.Light),
+    Font(R.font.estedad_regular, FontWeight.Normal),
+    Font(R.font.estedad_medium, FontWeight.Medium),
+    Font(R.font.estedad_bold, FontWeight.Bold),
+    Font(R.font.estedad_bold, FontWeight.SemiBold),
+    Font(R.font.estedad_bold, FontWeight.ExtraBold)
+)
+
+private fun TextStyle.est() = copy(fontFamily = Estedad)
+
+private fun estedadTypography(): Typography {
+    val d = Typography()
+    return d.copy(
+        displayLarge = d.displayLarge.est(), displayMedium = d.displayMedium.est(), displaySmall = d.displaySmall.est(),
+        headlineLarge = d.headlineLarge.est(), headlineMedium = d.headlineMedium.est().copy(fontWeight = FontWeight.Bold),
+        headlineSmall = d.headlineSmall.est(),
+        titleLarge = d.titleLarge.est(), titleMedium = d.titleMedium.est(), titleSmall = d.titleSmall.est(),
+        bodyLarge = d.bodyLarge.est(), bodyMedium = d.bodyMedium.est(), bodySmall = d.bodySmall.est(),
+        labelLarge = d.labelLarge.est(), labelMedium = d.labelMedium.est(), labelSmall = d.labelSmall.est()
+    )
+}
+
+/** گرادیان اصلی «غروب» برای دکمه‌ها و تأکیدها */
+val SunsetBrush: Brush = Brush.linearGradient(listOf(Color(0xFFFFB347), Color(0xFFFF6F61)))
+val SunsetBrushSoft: Brush = Brush.linearGradient(listOf(Color(0xFFFFE2B8), Color(0xFFFFD0C9)))
 
 @Composable
 fun SunsetTheme(darkTheme: Boolean, content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColors else LightColors,
+        typography = estedadTypography(),
         content = content
     )
 }

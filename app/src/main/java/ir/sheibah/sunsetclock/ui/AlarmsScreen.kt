@@ -1,5 +1,6 @@
 package ir.sheibah.sunsetclock.ui
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -100,6 +101,7 @@ fun AlarmsScreen(vm: MainViewModel) {
                             nowMs = minute * 60_000L,
                             zone = place.zone,
                             fa = fa,
+                            modifier = Modifier.animateItem(),
                             onClick = { editing = item },
                             onToggle = { vm.setAlarmEnabled(item, it) }
                         )
@@ -108,16 +110,13 @@ fun AlarmsScreen(vm: MainViewModel) {
             }
         }
 
-        FloatingActionButton(
+        RoundActionButton(
+            icon = Icons.Filled.Add,
+            contentDescription = stringResource(R.string.add_alarm),
             onClick = { editing = AlarmItem(id = 0) },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(20.dp),
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-        ) {
-            Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.add_alarm))
-        }
+            modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp),
+            size = 68.dp
+        )
     }
 
     val current = editing
@@ -148,6 +147,7 @@ private fun AlarmCard(
     nowMs: Long,
     zone: ZoneId,
     fa: Boolean,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     onToggle: (Boolean) -> Unit
 ) {
@@ -170,14 +170,10 @@ private fun AlarmCard(
     }
     val extraLabel = if (item.kind == AlarmKind.PRAYER) item.label else ""
 
-    Card(
+    SoftCard(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (item.enabled) MaterialTheme.colorScheme.surfaceContainerHigh
-            else MaterialTheme.colorScheme.surfaceContainer
-        )
+        modifier = modifier.fillMaxWidth().animateContentSize(),
+        brush = if (item.enabled) SunsetBrushSoft else null
     ) {
         Row(
             modifier = Modifier

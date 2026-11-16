@@ -121,11 +121,10 @@ fun ClockScreen(vm: MainViewModel, onOpenSettings: () -> Unit) {
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Text(
+                MonoDigits(
                     Fmt.clock(snap.sunsetSeconds.toLong(), fa),
                     fontSize = 44.sp,
-                    fontWeight = FontWeight.Light,
-                    color = MaterialTheme.colorScheme.onSurface
+                    weight = FontWeight.ExtraLight
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
@@ -222,12 +221,8 @@ fun ClockScreen(vm: MainViewModel, onOpenSettings: () -> Unit) {
 
 @Composable
 private fun InfoCard(content: @Composable () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) { content() }
+    SoftCard(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(18.dp)) { content() }
     }
 }
 

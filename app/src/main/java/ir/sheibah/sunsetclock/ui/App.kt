@@ -1,6 +1,14 @@
 package ir.sheibah.sunsetclock.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -71,14 +79,26 @@ fun SunsetApp(vm: MainViewModel) {
         var tab by rememberSaveable { mutableIntStateOf(0) }
 
         Scaffold(
-            containerColor = MaterialTheme.colorScheme.background,
+            modifier = Modifier.background(appBackgroundBrush()),
+            containerColor = Color.Transparent,
             bottomBar = {
-                NavigationBar {
+                NavigationBar(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.96f),
+                    tonalElevation = 0.dp,
+                    modifier = Modifier.softShadow(androidx.compose.ui.graphics.RectangleShape, 16.dp)
+                ) {
                     tabs.forEachIndexed { index, t ->
                         NavigationBarItem(
                             selected = tab == index,
                             onClick = { tab = index },
-                            icon = { Icon(t.icon, contentDescription = null) },
+                            icon = {
+                                val sc by animateFloatAsState(
+                                    if (tab == index) 1.18f else 1f,
+                                    spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+                                    label = "navIcon"
+                                )
+                                Icon(t.icon, contentDescription = null, modifier = Modifier.scale(sc))
+                            },
                             label = { Text(stringResource(t.label)) }
                         )
                     }
