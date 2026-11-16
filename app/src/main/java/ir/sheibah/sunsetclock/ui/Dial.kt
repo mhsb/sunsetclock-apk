@@ -32,6 +32,7 @@ import kotlin.math.sin
 fun SunsetDial(
     snap: ClockSnapshot,
     fa: Boolean,
+    ccw: Boolean,
     modifier: Modifier = Modifier,
     center: @Composable () -> Unit
 ) {
@@ -51,6 +52,9 @@ fun SunsetDial(
     val cycle = (snap.nextSunset - snap.lastSunset).toFloat()
     val nowFrac = ((snap.now - snap.lastSunset).toFloat() / cycle).coerceIn(0f, 1f)
     val sunriseFrac = ((snap.nextSunrise - snap.lastSunset).toFloat() / cycle).coerceIn(0f, 1f)
+    // جهت حرکت: ساعتگرد = +۱ ، پادساعتگرد = -۱
+    val dir = if (ccw) -1f else 1f
+    val dirD = dir.toDouble()
 
     Box(modifier = modifier.aspectRatio(1f), contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -64,7 +68,7 @@ fun SunsetDial(
             drawArc(
                 color = nightColor,
                 startAngle = -90f,
-                sweepAngle = sunriseFrac * 360f,
+                sweepAngle = dir * sunriseFrac * 360f,
                 useCenter = false,
                 topLeft = topLeft,
                 size = arcSize,
@@ -72,8 +76,8 @@ fun SunsetDial(
             )
             drawArc(
                 color = dayColor,
-                startAngle = -90f + sunriseFrac * 360f,
-                sweepAngle = (1f - sunriseFrac) * 360f,
+                startAngle = -90f + dir * sunriseFrac * 360f,
+                sweepAngle = dir * (1f - sunriseFrac) * 360f,
                 useCenter = false,
                 topLeft = topLeft,
                 size = arcSize,
@@ -83,7 +87,7 @@ fun SunsetDial(
             drawArc(
                 color = Color.White.copy(alpha = 0.45f),
                 startAngle = -90f,
-                sweepAngle = nowFrac * 360f,
+                sweepAngle = dir * nowFrac * 360f,
                 useCenter = false,
                 topLeft = topLeft,
                 size = arcSize,
@@ -94,7 +98,7 @@ fun SunsetDial(
             val tickOuter = radius - stroke / 2f - 4.dp.toPx()
             for (h in 0 until 24) {
                 val major = h % 6 == 0
-                val a = Math.toRadians(h / 24.0 * 360.0 - 90.0)
+                val a = Math.toRadians(dirD * h / 24.0 * 360.0 - 90.0)
                 val len = if (major) 11.dp.toPx() else 5.dp.toPx()
                 val x1 = c.x + (tickOuter * cos(a)).toFloat()
                 val y1 = c.y + (tickOuter * sin(a)).toFloat()
@@ -113,7 +117,7 @@ fun SunsetDial(
             paint.color = labelArgb
             val numR = tickOuter - 11.dp.toPx() - 14.dp.toPx()
             for (h in intArrayOf(0, 6, 12, 18)) {
-                val a = Math.toRadians(h / 24.0 * 360.0 - 90.0)
+                val a = Math.toRadians(dirD * h / 24.0 * 360.0 - 90.0)
                 val x = c.x + (numR * cos(a)).toFloat()
                 val y = c.y + (numR * sin(a)).toFloat()
                 drawIntoCanvas { canvas ->
@@ -124,13 +128,13 @@ fun SunsetDial(
             // نقطه‌ی رویدادها (اذان‌ها و ...)
             for (ev in snap.cycleEvents) {
                 val f = ((ev.time - snap.lastSunset).toFloat() / cycle).coerceIn(0f, 1f)
-                val a = Math.toRadians(f * 360.0 - 90.0)
+                val a = Math.toRadians(dirD * f * 360.0 - 90.0)
                 val p = Offset(c.x + (radius * cos(a)).toFloat(), c.y + (radius * sin(a)).toFloat())
                 drawCircle(color = dotColor.copy(alpha = 0.9f), radius = stroke * 0.2f, center = p)
             }
 
             // خورشید (لحظه‌ی اکنون)
-            val a = Math.toRadians(nowFrac * 360.0 - 90.0)
+            val a = Math.toRadians(dirD * nowFrac * 360.0 - 90.0)
             val sunPos = Offset(c.x + (radius * cos(a)).toFloat(), c.y + (radius * sin(a)).toFloat())
             drawCircle(color = sunColor.copy(alpha = 0.30f), radius = stroke * 1.0f, center = sunPos)
             drawCircle(color = Color.White, radius = stroke * 0.62f, center = sunPos)

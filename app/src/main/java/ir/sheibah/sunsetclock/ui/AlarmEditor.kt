@@ -1,13 +1,12 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package ir.sheibah.sunsetclock.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -41,7 +39,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ir.sheibah.sunsetclock.R
 import ir.sheibah.sunsetclock.astro.CalcMethod
@@ -51,6 +51,8 @@ import ir.sheibah.sunsetclock.core.AlarmItem
 import ir.sheibah.sunsetclock.core.AlarmKind
 import ir.sheibah.sunsetclock.core.Place
 import kotlin.math.abs
+
+private const val MAX_OFFSET_MIN = 720
 
 @Composable
 fun AlarmEditorSheet(
@@ -72,11 +74,10 @@ fun AlarmEditorSheet(
     )
     var anchor by remember { mutableStateOf(initial.anchor) }
     var before by remember { mutableStateOf(initial.offsetMin <= 0) }
-    var minutesText by remember { mutableStateOf(Fmt.digits(abs(initial.offsetMin).toString(), fa)) }
+    var minutes by remember { mutableIntStateOf(abs(initial.offsetMin).coerceAtMost(MAX_OFFSET_MIN)) }
     var days by remember { mutableIntStateOf(initial.daysMask) }
     var label by remember { mutableStateOf(initial.label) }
 
-    val minutes = Fmt.ascii(minutesText).toIntOrNull()?.coerceIn(0, 720) ?: 0
     val draft = AlarmItem(
         id = initial.id,
         label = label.trim(),
@@ -127,44 +128,47 @@ fun AlarmEditorSheet(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             } else {
+                // جمله‌ی قابل‌خواندن با چرخنده‌ها:  «۳۰  دقیقه  قبل  از  اذان صبح»
                 Text(stringResource(R.string.anchor_title), style = MaterialTheme.typography.labelLarge)
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    PrayerEvent.values()
-                        .filter { it != PrayerEvent.ASR || method.showAsr || it == anchor }
-                        .forEach { ev ->
-                            FilterChip(
-                                selected = anchor == ev,
-                                onClick = { anchor = ev },
-                                label = { Text(stringResource(ev.labelRes())) }
-                            )
-                        }
-                }
+
+                val events = PrayerEvent.values()
+                    .filter { it != PrayerEvent.ASR || method.showAsr || it == anchor }
+                val beforeLabel = stringResource(R.string.before)
+                val afterLabel = stringResource(R.string.after)
+                val minShort = stringResource(R.string.unit_min_short)
+                val ofText = stringResource(R.string.offset_of)
 
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    OutlinedTextField(
-                        value = minutesText,
-                        onValueChange = { v -> minutesText = v.filter { ch -> ch.isDigit() }.take(3) },
-                        label = { Text(stringResource(R.string.minutes)) },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.width(120.dp)
-                    )
-                    FilterChip(
-                        selected = before,
-                        onClick = { before = true },
-                        label = { Text(stringResource(R.string.before)) }
-                    )
-                    FilterChip(
-                        selected = !before,
-                        onClick = { before = false },
-                        label = { Text(stringResource(R.string.after)) }
-                    )
+                    WheelPicker(
+                        count = MAX_OFFSET_MIN + 1,
+                        selectedIndex = minutes,
+                        onSelected = { minutes = it },
+                        modifier = Modifier.width(60.dp)
+                    ) { i -> WheelText(Fmt.num(i, fa)) }
+
+                    Text(minShort, style = MaterialTheme.typography.bodyMedium)
+
+                    WheelPicker(
+                        count = 2,
+                        selectedIndex = if (before) 0 else 1,
+                        onSelected = { before = it == 0 },
+                        modifier = Modifier.width(64.dp)
+                    ) { i -> WheelText(if (i == 0) beforeLabel else afterLabel) }
+
+                    if (ofText.isNotEmpty()) {
+                        Text(ofText, style = MaterialTheme.typography.bodyMedium)
+                    }
+
+                    WheelPicker(
+                        count = events.size,
+                        selectedIndex = events.indexOf(anchor).coerceAtLeast(0),
+                        onSelected = { anchor = events[it] },
+                        modifier = Modifier.weight(1f)
+                    ) { i -> WheelText(stringResource(events[i].labelRes())) }
                 }
             }
 
@@ -227,10 +231,23 @@ fun AlarmEditorSheet(
 }
 
 @Composable
+private fun WheelText(text: String) {
+    Text(
+        text,
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Medium,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(horizontal = 4.dp)
+    )
+}
+
+@Composable
 private fun DayDot(text: String, selected: Boolean, onClick: () -> Unit) {
     val bg = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
     val fg = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-    androidx.compose.foundation.layout.Box(
+    Box(
         modifier = Modifier
             .size(40.dp)
             .clip(CircleShape)

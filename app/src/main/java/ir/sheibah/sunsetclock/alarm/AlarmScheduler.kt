@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import ir.sheibah.sunsetclock.MainActivity
 import ir.sheibah.sunsetclock.astro.CalcMethod
 import ir.sheibah.sunsetclock.core.AlarmCalc
@@ -107,6 +108,22 @@ object AlarmScheduler {
             context, 0, Intent(context, MainActivity::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        am.setAlarmClock(AlarmManager.AlarmClockInfo(at, show), operation)
+        try {
+            am.setAlarmClock(AlarmManager.AlarmClockInfo(at, show), operation)
+        } catch (e: SecurityException) {
+            // مجوز آلارم دقیق داده نشده است؛ برای جلوگیری از کرش، موقتاً آلارم تقریبی ثبت می‌شود
+            try {
+                am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, operation)
+            } catch (e2: Exception) {
+                // کاری از دست ما برنمی‌آید
+            }
+        }
+    }
+
+    /** آیا اجازه‌ی ثبت آلارم دقیق داریم؟ (روی اندروید ۱۲ به بالا بررسی می‌شود) */
+    fun canScheduleExact(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return true
+        val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        return am.canScheduleExactAlarms()
     }
 }

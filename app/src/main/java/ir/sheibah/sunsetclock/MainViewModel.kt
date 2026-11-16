@@ -88,6 +88,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setTheme(t: ThemeMode) = repo.update { it.copy(theme = t) }
 
+    fun setSunCcw(ccw: Boolean) = repo.update { it.copy(sunCcw = ccw) }
+
+    fun completeOnboarding() {
+        repo.update { it.copy(onboarded = true) }
+        rescheduleAll()
+    }
+
     fun disableGps() {
         repo.update { it.copy(useGps = false) }
         rescheduleAll()

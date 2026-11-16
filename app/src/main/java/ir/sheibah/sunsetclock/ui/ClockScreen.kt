@@ -108,6 +108,7 @@ fun ClockScreen(vm: MainViewModel, onOpenSettings: () -> Unit) {
         SunsetDial(
             snap = snap,
             fa = fa,
+            ccw = settings.sunCcw,
             modifier = Modifier
                 .widthIn(max = 380.dp)
                 .fillMaxWidth()

@@ -19,7 +19,11 @@ data class AppSettings(
     val gpsLng: Double = 0.0,
     val method: CalcMethod = CalcMethod.TEHRAN,
     val hijriAdjust: Int = 0,
-    val theme: ThemeMode = ThemeMode.SYSTEM
+    val theme: ThemeMode = ThemeMode.SYSTEM,
+    /** خورشید روی صفحه‌ی ساعت پادساعتگرد حرکت کند؟ */
+    val sunCcw: Boolean = true,
+    /** صفحه‌ی خوش‌آمدگویی (اولین ورود) انجام شده است؟ */
+    val onboarded: Boolean = false
 ) {
     /** مکان مؤثر: موقعیت تقریبی GPS اگر فعال و موجود باشد، وگرنه شهر انتخابی. */
     fun place(): Place =
@@ -47,7 +51,9 @@ class SettingsRepo private constructor(context: Context) {
                 .getOrDefault(d.method),
             hijriAdjust = prefs.getInt("hijri_adjust", d.hijriAdjust).coerceIn(-2, 2),
             theme = runCatching { ThemeMode.valueOf(prefs.getString("theme", d.theme.name) ?: d.theme.name) }
-                .getOrDefault(d.theme)
+                .getOrDefault(d.theme),
+            sunCcw = prefs.getBoolean("sun_ccw", d.sunCcw),
+            onboarded = prefs.getBoolean("onboarded", d.onboarded)
         )
     }
 
@@ -62,6 +68,8 @@ class SettingsRepo private constructor(context: Context) {
             .putString("method", s.method.name)
             .putInt("hijri_adjust", s.hijriAdjust)
             .putString("theme", s.theme.name)
+            .putBoolean("sun_ccw", s.sunCcw)
+            .putBoolean("onboarded", s.onboarded)
             .apply()
         _state.value = s
     }

@@ -64,6 +64,10 @@ fun SunsetApp(vm: MainViewModel) {
     }
 
     SunsetTheme(darkTheme = dark) {
+        if (!settings.onboarded) {
+            OnboardingScreen(vm = vm)
+            return@SunsetTheme
+        }
         var tab by rememberSaveable { mutableIntStateOf(0) }
 
         Scaffold(

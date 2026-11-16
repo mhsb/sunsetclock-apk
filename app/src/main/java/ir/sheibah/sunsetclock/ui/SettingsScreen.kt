@@ -68,22 +68,22 @@ import ir.sheibah.sunsetclock.astro.CalcMethod
 import ir.sheibah.sunsetclock.core.Cities
 import ir.sheibah.sunsetclock.data.ThemeMode
 
-private fun notificationsGranted(context: Context): Boolean =
+internal fun notificationsGranted(context: Context): Boolean =
     Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
         ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
         PackageManager.PERMISSION_GRANTED
 
-private fun fullScreenIntentAllowed(context: Context): Boolean {
+internal fun fullScreenIntentAllowed(context: Context): Boolean {
     if (Build.VERSION.SDK_INT < 34) return true
     val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     return nm.canUseFullScreenIntent()
 }
 
-private fun toast(context: Context, @StringRes id: Int) {
+internal fun toast(context: Context, @StringRes id: Int) {
     Toast.makeText(context, id, Toast.LENGTH_SHORT).show()
 }
 
-private fun openSafely(context: Context, intent: Intent) {
+internal fun openSafely(context: Context, intent: Intent) {
     try {
         context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     } catch (e: Exception) {
@@ -105,18 +105,6 @@ fun SettingsScreen(vm: MainViewModel) {
     val uriHandler = LocalUriHandler.current
 
     var dialog by remember { mutableStateOf<String?>(null) }
-    var notifGranted by remember { mutableStateOf(notificationsGranted(context)) }
-    var fullScreenOk by remember { mutableStateOf(fullScreenIntentAllowed(context)) }
-
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        notifGranted = notificationsGranted(context)
-        fullScreenOk = fullScreenIntentAllowed(context)
-    }
-
-    val notifLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        notifGranted = granted
-    }
-
     fun fetchLocation() {
         vm.useApproximateLocation { ok ->
             toast(context, if (ok) R.string.gps_ok else R.string.gps_failed)
@@ -219,46 +207,19 @@ fun SettingsScreen(vm: MainViewModel) {
                 },
                 onClick = { dialog = "lang" }
             )
+            RowDivider()
+            SwitchRow(
+                title = stringResource(R.string.sun_ccw),
+                subtitle = stringResource(R.string.sun_ccw_hint),
+                checked = settings.sunCcw,
+                onChange = { vm.setSunCcw(it) }
+            )
         }
 
         // ---- هشدارها ----
         SectionTitle(stringResource(R.string.section_alarm_reliability))
         SettingsCard {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                ActionRow(
-                    title = stringResource(R.string.perm_notifications),
-                    status = stringResource(if (notifGranted) R.string.perm_ok else R.string.perm_missing),
-                    ok = notifGranted,
-                    buttonText = stringResource(R.string.perm_grant),
-                    onClick = { notifLauncher.launch(Manifest.permission.POST_NOTIFICATIONS) }
-                )
-                RowDivider()
-            }
-            if (Build.VERSION.SDK_INT >= 34) {
-                ActionRow(
-                    title = stringResource(R.string.perm_fullscreen),
-                    status = stringResource(if (fullScreenOk) R.string.perm_ok else R.string.perm_missing),
-                    ok = fullScreenOk,
-                    buttonText = stringResource(R.string.perm_open_settings),
-                    onClick = {
-                        openSafely(
-                            context,
-                            Intent(
-                                Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
-                                Uri.parse("package:" + context.packageName)
-                            )
-                        )
-                    }
-                )
-                RowDivider()
-            }
-            ActionRow(
-                title = stringResource(R.string.perm_battery),
-                status = stringResource(R.string.perm_battery_hint),
-                ok = true,
-                buttonText = stringResource(R.string.perm_open_settings),
-                onClick = { openSafely(context, Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)) }
-            )
+            PermissionRows()
         }
 
         // ---- درباره ----
@@ -357,7 +318,7 @@ fun SettingsScreen(vm: MainViewModel) {
 // ---------- اجزای کمکی ----------
 
 @Composable
-private fun SectionTitle(text: String) {
+internal fun SectionTitle(text: String) {
     Text(
         text,
         style = MaterialTheme.typography.titleSmall,
@@ -367,7 +328,7 @@ private fun SectionTitle(text: String) {
 }
 
 @Composable
-private fun SettingsCard(content: @Composable () -> Unit) {
+internal fun SettingsCard(content: @Composable () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp),
@@ -378,7 +339,7 @@ private fun SettingsCard(content: @Composable () -> Unit) {
 }
 
 @Composable
-private fun RowDivider() {
+internal fun RowDivider() {
     HorizontalDivider(
         modifier = Modifier.padding(horizontal = 16.dp),
         color = MaterialTheme.colorScheme.outlineVariant
@@ -386,7 +347,7 @@ private fun RowDivider() {
 }
 
 @Composable
-private fun ValueRow(title: String, value: String, onClick: () -> Unit) {
+internal fun ValueRow(title: String, value: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -404,7 +365,7 @@ private fun ValueRow(title: String, value: String, onClick: () -> Unit) {
 }
 
 @Composable
-private fun SwitchRow(title: String, subtitle: String, checked: Boolean, onChange: (Boolean) -> Unit) {
+internal fun SwitchRow(title: String, subtitle: String, checked: Boolean, onChange: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -425,7 +386,7 @@ private fun SwitchRow(title: String, subtitle: String, checked: Boolean, onChang
 }
 
 @Composable
-private fun StepperRow(
+internal fun StepperRow(
     title: String,
     subtitle: String,
     valueText: String,
@@ -453,7 +414,7 @@ private fun StepperRow(
 }
 
 @Composable
-private fun ActionRow(
+internal fun ActionRow(
     title: String,
     status: String,
     ok: Boolean,
@@ -480,7 +441,7 @@ private fun ActionRow(
 }
 
 @Composable
-private fun <T> ChoiceDialog(
+internal fun <T> ChoiceDialog(
     title: String,
     options: List<Pair<T, String>>,
     selected: T,
@@ -514,7 +475,7 @@ private fun <T> ChoiceDialog(
 }
 
 @Composable
-private fun CityDialog(selectedId: String, fa: Boolean, onSelect: (String) -> Unit, onDismiss: () -> Unit) {
+internal fun CityDialog(selectedId: String, fa: Boolean, onSelect: (String) -> Unit, onDismiss: () -> Unit) {
     var query by remember { mutableStateOf("") }
     val q = query.trim().replace('ي', 'ی').replace('ك', 'ک')
     val filtered = Cities.all.filter {
@@ -554,4 +515,79 @@ private fun CityDialog(selectedId: String, fa: Boolean, onSelect: (String) -> Un
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.close)) }
         }
     )
+}
+
+/** ردیف‌های مجوزهای لازم برای زنگ خوردن هشدار؛ هم در تنظیمات و هم در صفحه‌ی خوش‌آمدگویی استفاده می‌شود. */
+@Composable
+internal fun PermissionRows() {
+    val context = LocalContext.current
+    var notifGranted by remember { mutableStateOf(notificationsGranted(context)) }
+    var fullScreenOk by remember { mutableStateOf(fullScreenIntentAllowed(context)) }
+    var exactOk by remember { mutableStateOf(ir.sheibah.sunsetclock.alarm.AlarmScheduler.canScheduleExact(context)) }
+
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        notifGranted = notificationsGranted(context)
+        fullScreenOk = fullScreenIntentAllowed(context)
+        exactOk = ir.sheibah.sunsetclock.alarm.AlarmScheduler.canScheduleExact(context)
+    }
+
+    val notifLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        notifGranted = granted
+    }
+
+    Column {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActionRow(
+                title = stringResource(R.string.perm_notifications),
+                status = stringResource(if (notifGranted) R.string.perm_ok else R.string.perm_missing),
+                ok = notifGranted,
+                buttonText = stringResource(R.string.perm_grant),
+                onClick = { notifLauncher.launch(Manifest.permission.POST_NOTIFICATIONS) }
+            )
+            RowDivider()
+        }
+        if (!exactOk) {
+            ActionRow(
+                title = stringResource(R.string.perm_exact),
+                status = stringResource(R.string.perm_exact_missing),
+                ok = false,
+                buttonText = stringResource(R.string.perm_open_settings),
+                onClick = {
+                    openSafely(
+                        context,
+                        Intent(
+                            Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                            Uri.parse("package:" + context.packageName)
+                        )
+                    )
+                }
+            )
+            RowDivider()
+        }
+        if (Build.VERSION.SDK_INT >= 34) {
+            ActionRow(
+                title = stringResource(R.string.perm_fullscreen),
+                status = stringResource(if (fullScreenOk) R.string.perm_ok else R.string.perm_missing),
+                ok = fullScreenOk,
+                buttonText = stringResource(R.string.perm_open_settings),
+                onClick = {
+                    openSafely(
+                        context,
+                        Intent(
+                            Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT,
+                            Uri.parse("package:" + context.packageName)
+                        )
+                    )
+                }
+            )
+            RowDivider()
+        }
+        ActionRow(
+            title = stringResource(R.string.perm_battery),
+            status = stringResource(R.string.perm_battery_hint),
+            ok = true,
+            buttonText = stringResource(R.string.perm_open_settings),
+            onClick = { openSafely(context, Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)) }
+        )
+    }
 }

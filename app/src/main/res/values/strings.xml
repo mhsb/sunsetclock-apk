@@ -176,4 +176,23 @@
         <item>ذی‌القعده</item>
         <item>ذی‌الحجه</item>
     </string-array>
+
+    <string name="unit_min_short">دقیقه</string>
+    <string name="offset_of">از</string>
+    <string name="sun_ccw">حرکت خورشید پادساعتگرد</string>
+    <string name="sun_ccw_hint">جهت حرکت خورشید روی صفحه‌ی ساعت؛ خاموش = ساعتگرد</string>
+    <string name="perm_exact">زنگ دقیق هشدار</string>
+    <string name="perm_exact_missing">اجازه‌ی «هشدارها و یادآورها» داده نشده؛ هشدارها ممکن است با تأخیر زنگ بخورند</string>
+    <string name="onb_step_fmt">مرحله %1$s از %2$s</string>
+    <string name="onb_welcome_title">به ساعت غروب‌کوک خوش آمدید</string>
+    <string name="onb_lang_hint">چند تنظیم اولیه را انجام دهید؛ بعداً هم از بخش تنظیمات قابل تغییر است. زبان را انتخاب کنید.</string>
+    <string name="onb_location_title">موقعیت جغرافیایی</string>
+    <string name="onb_location_hint">غروب و اذان‌ها به مکان شما بستگی دارند. شهر را انتخاب کنید یا موقعیت تقریبی گوشی را بگیرید.</string>
+    <string name="onb_method_title">روش محاسبه و تاریخ قمری</string>
+    <string name="onb_method_hint">روش پیش‌فرض، مؤسسه‌ی ژئوفیزیک دانشگاه تهران است. اگر تاریخ قمری با رؤیت هلال یک روز اختلاف دارد، تعدیل کنید.</string>
+    <string name="onb_perm_title">مجوزهای هشدار</string>
+    <string name="onb_perm_hint">برای اینکه هشدارها به‌موقع و حتی با صفحه‌ی خاموش زنگ بخورند، این موارد را فعال کنید.</string>
+    <string name="onb_next">بعدی</string>
+    <string name="onb_back">قبلی</string>
+    <string name="onb_finish">شروع</string>
 </resources>

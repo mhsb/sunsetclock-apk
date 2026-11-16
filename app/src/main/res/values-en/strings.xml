@@ -174,4 +174,23 @@
         <item>Dhu al-Qadah</item>
         <item>Dhu al-Hijjah</item>
     </string-array>
+
+    <string name="unit_min_short">min</string>
+    <string name="offset_of"></string>
+    <string name="sun_ccw">Counterclockwise sun</string>
+    <string name="sun_ccw_hint">Direction the sun moves on the dial; off = clockwise</string>
+    <string name="perm_exact">Exact alarms</string>
+    <string name="perm_exact_missing">\"Alarms &amp; reminders\" permission is off; alarms may ring late</string>
+    <string name="onb_step_fmt">Step %1$s of %2$s</string>
+    <string name="onb_welcome_title">Welcome to Sunset Clock</string>
+    <string name="onb_lang_hint">A few quick settings first; you can change them later in Settings. Choose your language.</string>
+    <string name="onb_location_title">Location</string>
+    <string name="onb_location_hint">Sunset and prayer times depend on where you are. Pick a city or use your phone\'s approximate location.</string>
+    <string name="onb_method_title">Calculation method &amp; Hijri date</string>
+    <string name="onb_method_hint">The default is the University of Tehran Institute of Geophysics. Adjust the Hijri date if it differs by a day from moon sighting.</string>
+    <string name="onb_perm_title">Alarm permissions</string>
+    <string name="onb_perm_hint">Enable these so alarms ring on time, even with the screen off.</string>
+    <string name="onb_next">Next</string>
+    <string name="onb_back">Back</string>
+    <string name="onb_finish">Start</string>
 </resources>
