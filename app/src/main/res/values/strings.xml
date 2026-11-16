@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- پیش‌فرض: فارسی (values-en انگلیسی است) -->
+    <string name="app_name">ساعت غروب‌کوک</string>
+
+    <!-- اعلان و هشدار -->
+    <string name="alarm">هشدار</string>
+    <string name="snooze">۱۰ دقیقه دیگر</string>
+    <string name="dismiss">خاموش</string>
+    <string name="timer_done">تایمر تمام شد</string>
+    <string name="channel_alarm">هشدارها</string>
+    <string name="channel_alarm_desc">نمایش و صدای هشدارها و تایمر</string>
+
+    <!-- رویدادهای روزانه -->
+    <string name="ev_fajr">اذان صبح</string>
+    <string name="ev_sunrise">طلوع آفتاب</string>
+    <string name="ev_dhuhr">اذان ظهر</string>
+    <string name="ev_asr">عصر</string>
+    <string name="ev_sunset">غروب آفتاب</string>
+    <string name="ev_maghrib">اذان مغرب</string>
+    <string name="ev_isha">عشا</string>
+    <string name="ev_midnight">نیمه‌شب شرعی</string>
+
+    <!-- روش‌های محاسبه -->
+    <string name="method_tehran">مؤسسه ژئوفیزیک دانشگاه تهران</string>
+    <string name="method_leva">مؤسسه تحقیقات لوا (قم)</string>
+    <string name="method_mwl">رابطه جهان اسلام (MWL)</string>
+    <string name="method_isna">جامعه اسلامی آمریکای شمالی (ISNA)</string>
+    <string name="method_egypt">هیئت نقشه‌برداری مصر</string>
+    <string name="method_makkah">ام‌القری (مکه)</string>
+    <string name="method_karachi">دانشگاه علوم اسلامی کراچی</string>
+
+    <!-- زمان باقی‌مانده -->
+    <string name="in_less_than_min">کمتر از یک دقیقه دیگر</string>
+    <string name="in_min">تا %1$s دقیقه دیگر</string>
+    <string name="in_hm">تا %1$s ساعت و %2$s دقیقه دیگر</string>
+    <string name="in_dh">تا %1$s روز و %2$s ساعت دیگر</string>
+    <string name="once">یک‌بار</string>
+    <string name="every_day">هر روز</string>
+
+    <!-- صفحه‌ی ساعت -->
+    <string name="approx_location">موقعیت تقریبی (GPS)</string>
+    <string name="sunset_clock">ساعت غروب‌کوک</string>
+    <string name="local_time_fmt">ساعت عادی %1$s</string>
+    <string name="next_event">رویداد بعدی</string>
+    <string name="countdown_fmt">%1$s مانده</string>
+    <string name="todays_times">اوقات امروز</string>
+    <string name="night_progress">شب</string>
+    <string name="day_progress">روز</string>
+    <string name="bar_detail">گذشته %1$s · مانده %2$s</string>
+    <string name="bar_done">تمام شد</string>
+    <string name="bar_not_started">هنوز شروع نشده</string>
+    <string name="night_of">شب %1$s</string>
+    <string name="day_of">روز %1$s</string>
+
+    <!-- زبانه‌ها -->
+    <string name="tab_clock">ساعت</string>
+    <string name="tab_alarms">هشدار</string>
+    <string name="tab_stopwatch">کرنومتر</string>
+    <string name="tab_timer">تایمر</string>
+    <string name="tab_settings">تنظیمات</string>
+
+    <!-- هشدارها -->
+    <string name="no_alarms">هنوز هشداری نساخته‌اید. با دکمه‌ی + یک هشدار بسازید؛ می‌توانید آن را نسبت به اذان صبح، مغرب و ... هم تنظیم کنید.</string>
+    <string name="add_alarm">افزودن هشدار</string>
+    <string name="offset_same">هم‌زمان با %1$s</string>
+    <string name="offset_before">%1$s دقیقه قبل از %2$s</string>
+    <string name="offset_after">%1$s دقیقه بعد از %2$s</string>
+    <string name="new_alarm">هشدار جدید</string>
+    <string name="edit_alarm">ویرایش هشدار</string>
+    <string name="kind_clock">ساعت معمولی</string>
+    <string name="kind_prayer">نسبت به اذان / رویداد</string>
+    <string name="anchor_title">رویداد مبنا</string>
+    <string name="minutes">دقیقه</string>
+    <string name="before">قبل</string>
+    <string name="after">بعد</string>
+    <string name="next_ring_fmt">زنگ بعدی: %1$s (%2$s)</string>
+    <string name="repeat_days">تکرار در روزهای</string>
+    <string name="repeat_hint">اگر روزی انتخاب نشود، فقط یک‌بار زنگ می‌زند.</string>
+    <string name="label">برچسب (اختیاری)</string>
+    <string name="delete">حذف</string>
+    <string name="cancel">انصراف</string>
+    <string name="save">ذخیره</string>
+
+    <!-- کرنومتر و تایمر -->
+    <string name="lap">دور</string>
+    <string name="reset">از نو</string>
+    <string name="pause">توقف</string>
+    <string name="start">شروع</string>
+    <string name="lap_fmt">دور %1$s</string>
+    <string name="unit_hours">ساعت</string>
+    <string name="unit_minutes">دقیقه</string>
+    <string name="unit_seconds">ثانیه</string>
+    <string name="preset_min">%1$s دقیقه</string>
+    <string name="timer_ends_at">پایان: %1$s</string>
+    <string name="paused">متوقف</string>
+    <string name="add_minute">+۱ دقیقه</string>
+
+    <!-- تنظیمات -->
+    <string name="gps_ok">موقعیت تقریبی به‌روز شد</string>
+    <string name="gps_failed">موقعیت پیدا نشد. موقعیت مکانی گوشی را روشن کنید یا شهر را دستی انتخاب کنید.</string>
+    <string name="gps_denied">اجازه‌ی موقعیت داده نشد؛ شهر را دستی انتخاب کنید.</string>
+    <string name="section_location">مکان و محاسبه</string>
+    <string name="city">شهر</string>
+    <string name="use_gps">استفاده از موقعیت تقریبی</string>
+    <string name="use_gps_hint">اوقات بر اساس موقعیت تقریبی شما حساب می‌شود و به جایی ارسال نمی‌شود.</string>
+    <string name="calc_method">روش محاسبه‌ی اوقات</string>
+    <string name="hijri_adjust">تعدیل تاریخ قمری</string>
+    <string name="hijri_adjust_hint">بر حسب روز؛ برای هماهنگی با رؤیت هلال</string>
+    <string name="section_appearance">ظاهر</string>
+    <string name="theme">پوسته</string>
+    <string name="theme_system">پیش‌فرض سیستم</string>
+    <string name="theme_light">روشن</string>
+    <string name="theme_dark">تیره</string>
+    <string name="language">زبان</string>
+    <string name="section_alarm_reliability">اطمینان از زنگ خوردن هشدارها</string>
+    <string name="perm_notifications">اجازه‌ی اعلان</string>
+    <string name="perm_ok">فعال است</string>
+    <string name="perm_missing">فعال نیست؛ بدون آن ممکن است هشدار دیده نشود</string>
+    <string name="perm_grant">اجازه دادن</string>
+    <string name="perm_fullscreen">نمایش هشدار روی صفحه‌ی قفل</string>
+    <string name="perm_open_settings">باز کردن تنظیمات</string>
+    <string name="perm_battery">محدودیت باتری</string>
+    <string name="perm_battery_hint">در برخی گوشی‌ها (شیائومی، سامسونگ و ...) اپ را از بهینه‌سازی باتری و محدودیت اجرا در پس‌زمینه مستثنا کنید تا هشدارها به‌موقع زنگ بخورند.</string>
+    <string name="section_about">درباره</string>
+    <string name="version_fmt">نسخه %1$s</string>
+    <string name="about_theory">ساعت غروب‌کوک ساعتی است که هر روز با غروب آفتاب «کوک» می‌شود: ساعت ۰ لحظه‌ی غروب است و فاصله‌ی دو غروب پیاپی به ۲۴ ساعت مساوی تقسیم می‌شود. (الهام‌گرفته از ایده‌ی ساعت غروب‌کوک علامه تهرانی)</string>
+    <string name="about_credit">ساخته‌شده توسط حسین شیبه</string>
+    <string name="close">بستن</string>
+    <string name="search">جست‌وجو</string>
+
+    <!-- نام‌ها -->
+    <string-array name="weekdays">
+        <item>دوشنبه</item>
+        <item>سه‌شنبه</item>
+        <item>چهارشنبه</item>
+        <item>پنج‌شنبه</item>
+        <item>جمعه</item>
+        <item>شنبه</item>
+        <item>یکشنبه</item>
+    </string-array>
+    <string-array name="weekdays_short">
+        <item>د</item>
+        <item>س</item>
+        <item>چ</item>
+        <item>پ</item>
+        <item>ج</item>
+        <item>ش</item>
+        <item>ی</item>
+    </string-array>
+    <string-array name="jalali_months">
+        <item>فروردین</item>
+        <item>اردیبهشت</item>
+        <item>خرداد</item>
+        <item>تیر</item>
+        <item>مرداد</item>
+        <item>شهریور</item>
+        <item>مهر</item>
+        <item>آبان</item>
+        <item>آذر</item>
+        <item>دی</item>
+        <item>بهمن</item>
+        <item>اسفند</item>
+    </string-array>
+    <string-array name="hijri_months">
+        <item>محرم</item>
+        <item>صفر</item>
+        <item>ربیع‌الاول</item>
+        <item>ربیع‌الثانی</item>
+        <item>جمادی‌الاول</item>
+        <item>جمادی‌الثانی</item>
+        <item>رجب</item>
+        <item>شعبان</item>
+        <item>رمضان</item>
+        <item>شوال</item>
+        <item>ذی‌القعده</item>
+        <item>ذی‌الحجه</item>
+    </string-array>
+</resources>
